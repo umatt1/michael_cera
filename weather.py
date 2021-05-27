@@ -3,11 +3,13 @@ from chess import confidence
 import requests
 import json
 import math
-from secrets import weather_key
 
+# keep keys a secret
+from secrets import weather_key
 key = weather_key
 
 
+# used to "hash" the temperatures into a list
 def index_of_likes(temperature):
     if int(temperature) < 0:
         return 2
@@ -35,6 +37,7 @@ def index_of_likes(temperature):
         return 24
 
 
+# used to "hash" the temperatures into a list
 def index_of_dislikes(temperature):
     if int(temperature) < 0:
         return 2 + 1
@@ -62,6 +65,7 @@ def index_of_dislikes(temperature):
         return 24 + 1
 
 
+# to data
 class michael_cera:
     def __init__(self, name, link, id, likes=0, dislikes=0):
         self._name = name
@@ -106,6 +110,7 @@ class michael_cera:
         return f"{self._likes} likes, {self._dislikes} dislikes. {self._name}"
 
 
+# return a list of michael ceras, list
 def michael_cerafier(temperature, raining=False, snowing=False, windspeed=0, clouds=0):
     def index_of_likes(temperature):
         if int(temperature) < 0:
@@ -177,8 +182,10 @@ def michael_cerafier(temperature, raining=False, snowing=False, windspeed=0, clo
     return options, datas
 
 
+# flask blueprint
 what2wear = Blueprint('what2wear', __name__, template_folder='templates')
 
+# render home page
 @what2wear.route("/", methods=['POST', 'GET'])
 def weather_home():
     if request.method == "POST":
@@ -187,6 +194,7 @@ def weather_home():
     else:
         return render_template("what2wear.html")
 
+# render results, process submission
 @what2wear.route("/<location>/", methods=["POST", "GET"])
 def weather(location):
     response = requests.get(f"https://api.weatherbit.io/v2.0/current?key={key}&postal_code={location}")
@@ -237,6 +245,7 @@ def weather(location):
                                city=city_name, weather=weather, F=int(fahrenheit), C=celsius)
 
 
+# basic api tests
 if __name__ == '__main__':
     postal = "49085"
     response = requests.get(f"https://api.weatherbit.io/v2.0/current?key={key}&postal_code={postal}")

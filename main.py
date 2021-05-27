@@ -9,9 +9,10 @@ from motif_finder import motifer
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from weather import what2wear
+from secrets import session_key
 
 app = Flask(__name__)
-app.secret_key = "this key is a secret"
+app.secret_key = session_key
 app.permanent_session_lifetime = timedelta(seconds=30)
 
 app.register_blueprint(openings_guru, url_prefix="/chess")
